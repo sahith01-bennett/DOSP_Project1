@@ -110,6 +110,37 @@ actor Main
 //Things to do:
 // 1) Need to some how calculate the time, i.e how the program is taking to complete the task amd metrics Prof asked 
 // 2) write code which allows to take input from command line instead of hardcoding the inputs
+
+
+actor Main
+  new create(env: Env) =>
+    let args = env.args()
+
+    // Check if the correct number of arguments are provided
+    if args.size() != 3 then
+      env.out.print("Usage: lukas <n> <k>")
+      return
+    end
+
+    // Parse the command-line arguments
+    try
+      let n = args(1).u64()
+      let k = args(2).u64()
+
+      let total_workers: U32 = 100
+
+      let boss = Boss(env, total_workers.u64())
+      boss.start(n, k, env)
+    else
+      env.out.print("Invalid input. Please provide valid integers for n and k.")
+      return
+    end
+
+
+
+
+
+
 // 3) make a readme file with all the metrics and everything needed to run file
 /* 4) if still there is still time left we can do some optimization in worker actor by calculating sum of squares using sum of n
       N squares formula 
