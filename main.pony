@@ -1,5 +1,6 @@
 use "collections"
 use "runtime_info"
+use "cli"
 
 actor Worker 
   be calculate(startind: U64, k: U64, endind: U64, env : Env , boss: Boss) =>
@@ -99,48 +100,45 @@ actor Boss
 
 actor Main
   new create(env: Env) =>
-    let n: U64 = 1000000000 
-    let k: U64 = 4 //  window size
+
+    let cs =
+      try
+        CommandSpec.leaf("echo", "A sample echo program", [
+          OptionSpec.bool("LUKAS", "lukas square Pyramid"
+            where short' = 'L', default' = false)
+        ], [
+          ArgSpec.u64("num1", "Value of N")
+          ArgSpec.u64("num2", "Valur of K")
+        ])? .> add_help()?
+      else
+        env.exitcode(-1)  // some kind of coding error
+        return
+      end
+    let cmd =
+      match CommandParser(cs).parse(env.args, env.vars)
+      | let c: Command => c
+      | let ch: CommandHelp =>
+          ch.print_help(env.out)
+          env.exitcode(0)
+          return
+      | let se: SyntaxError =>
+          env.out.print(se.string())
+          env.exitcode(1)
+          return
+      end
+    let num1 = cmd.arg("num1").u64()
+    let num2 = cmd.arg("num2").u64()
+
+    
 
     let total_workers: U32 = 100  // Total worker count based on available processors
 
     let boss = Boss(env, total_workers.u64())
-    boss.start(n, k, env)
+    boss.start(num1, num2, env)
 
 //Things to do:
 // 1) Need to some how calculate the time, i.e how the program is taking to complete the task amd metrics Prof asked 
 // 2) write code which allows to take input from command line instead of hardcoding the inputs
-
-
-actor Main
-  new create(env: Env) =>
-    let args = env.args()
-
-    // Check if the correct number of arguments are provided
-    if args.size() != 3 then
-      env.out.print("Usage: lukas <n> <k>")
-      return
-    end
-
-    // Parse the command-line arguments
-    try
-      let n = args(1).u64()
-      let k = args(2).u64()
-
-      let total_workers: U32 = 100
-
-      let boss = Boss(env, total_workers.u64())
-      boss.start(n, k, env)
-    else
-      env.out.print("Invalid input. Please provide valid integers for n and k.")
-      return
-    end
-
-
-
-
-
-
 // 3) make a readme file with all the metrics and everything needed to run file
 /* 4) if still there is still time left we can do some optimization in worker actor by calculating sum of squares using sum of n
       N squares formula 
