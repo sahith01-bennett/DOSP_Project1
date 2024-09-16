@@ -8,9 +8,14 @@ actor Worker
     // Initial sum for the first window
     let utils = Utilities
 
-    for i in Range[U64](startind,startind + (k)) do
+    /*for i in Range[U64](startind,startind + (k)) do
       sum = sum + (i * i)
-    end
+    end*/
+    var m = startind
+    var n = startind + (k-1)
+    sum = ((((n * (n + 1)) * ((2 * n) + 1)) - (((m - 1) * m) * ((2 * m) - 1))) / 6)
+
+    //env.out.print(sum.string())
    // Printer.print(sum,env)
     // Check if the sum is a perfect square
     var value = utils.sqrt(sum)
@@ -131,17 +136,14 @@ actor Main
 
     
 
-    let total_workers: U32 = 100  // Total worker count based on available processors
+    let total_workers: U32 = 10  // Total worker count based on available processors
 
     let boss = Boss(env, total_workers.u64())
     boss.start(num1, num2, env)
 
 //Things to do:
-// 1) Need to some how calculate the time, i.e how the program is taking to complete the task amd metrics Prof asked 
-// 2) write code which allows to take input from command line instead of hardcoding the inputs
 // 3) make a readme file with all the metrics and everything needed to run file
-/* 4) if still there is still time left we can do some optimization in worker actor by calculating sum of squares using sum of n
-      N squares formula 
+/* 
 */
 
     
