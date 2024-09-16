@@ -24,8 +24,6 @@ actor Worker
       env.out.print("1 s = " + value.string())
     end
 
-    
-
     //Slide the window across the range
     for i in Range[U64](startind + 1,endind+1) do
       sum = sum + (((i + (k - 1)) * (i + (k - 1))) - ((i - 1) * (i - 1)))
@@ -109,7 +107,7 @@ actor Main
     let cs =
       try
         CommandSpec.leaf("echo", "A sample echo program", [
-          OptionSpec.bool("LUKAS", "lukas square Pyramid"
+          OptionSpec.bool("lukas", "lukas square Pyramid"
             where short' = 'L', default' = false)
         ], [
           ArgSpec.u64("num1", "Value of N")
@@ -136,7 +134,7 @@ actor Main
 
     
 
-    let total_workers: U32 = 10  // Total worker count based on available processors
+    let total_workers: U32 = Scheduler.schedulers(SchedulerInfoAuth(env.root)) // Total worker count based on available processors
 
     let boss = Boss(env, total_workers.u64())
     boss.start(num1, num2, env)
