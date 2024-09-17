@@ -80,24 +80,24 @@ The program was run with the command  `./DOSP_Project1 --lucas 10000000000 24` o
 (base) bunny@Sahiths-MacBook-Pro project-1 % time ./project-1 10000000000 24
  
 Result format = `<sequence starting number> s = <square root of sum of square of all numbers in the sequence>`
-1 s = 70
-9 s = 106
-20 s = 158
-25 s = 182
-44 s = 274
+1 s = 70 \
+9 s = 106 \
+20 s = 158 \
+25 s = 182 \
+44 s = 274 \
 76 s = 430
 …
 …
 …
 
-29991872 s = 146929622
-34648837 s = 169743998
-52422128 s = 256814986
-82457176 s = 403956070
-196231265 s = 961332998
-7828087407 s = 1050833933
-All workers completed
-./project-1 10000000000 24  1795.27s user 4.82s system 967% cpu 3:06.09 total
+29991872 s = 146929622  
+34648837 s = 169743998 \
+52422128 s = 256814986 \
+82457176 s = 403956070 \
+196231265 s = 961332998 \
+7828087407 s = 1050833933 \
+All workers completed  \
+./project-1 10000000000 24  1795.27s user 4.82s system 967% cpu 3:06.09 total 
 
 ### Running Time
 
