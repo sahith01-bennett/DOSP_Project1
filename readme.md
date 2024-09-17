@@ -17,8 +17,9 @@ ponyc
 ```
 To run the compiled binary:
  ```bash
-./<binary-name> 
+./<binary-name> --lucas <N> <k>
 ```
+
 
 
 ## Code Overview
