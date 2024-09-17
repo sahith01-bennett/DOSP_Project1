@@ -78,6 +78,8 @@ The program was run with the command  `./DOSP_Project1 --lucas 10000000000 24` o
 
 
 (base) bunny@Sahiths-MacBook-Pro project-1 % time ./project-1 10000000000 24
+ 
+Result format = `<sequence starting number> s = <square root of sum of square of all numbers in the sequence>`
 1 s = 70
 9 s = 106
 20 s = 158
