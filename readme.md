@@ -1,5 +1,5 @@
 
-# Lukas Square Pyramid Problem Solver (for MAC OS)
+# Lukas Square Pyramid Problem Solver 
 This project solves the Lukas Square Pyramid problem using the actor model in Pony. The goal is to find sequences of consecutive numbers where the sum of their squares is a perfect square. The program is designed to run on multi-core machines for optimal performance.
 
 
@@ -30,14 +30,13 @@ The project consists of three main actors:
 
 The **Utilities** class provides helper functions, including:
 - `sqrt`: A binary search algorithm which returns a square root of given number.
-
 ## Work Unit Size and Optimization
 
 ### Size of the Work Unit
-The size of the work unit (number of sub-problems assigned to each worker) plays a crucial role in the overall performance of the program. After testing with different problem sizes and worker distributions, we determined that splitting the total range evenly among the available workers.
+The size of the work unit (number of sub-problems assigned to each worker) plays a crucial role in the overall performance of the program. After testing with different problem sizes and worker distributions, we determined that splitting the total range evenly among the available workers was the best option.
 **Explanation**:
 - Each worker receives a segment of the problem defined by the range of consecutive numbers they need to process. The range is divided by the total number of workers (let’s say 10 workers).
-- The work unit size is calculated as `N / total_workers` (where `N` is the upper limit provided by the user). If this work unit size value is smaller than `k`, the size is adjusted to ensure that each worker processes at least `k` consecutive numbers. When the work unit size is `k` for the final division of the remaining extra set of numbers, they all are assigned to a worker.
+- The work unit size is calculated as `N / total_workers` (where `N` is the upper limit provided by the user).
 
 ### Example:
 - For an input of `lukas 1000000 4`, the work unit is split into chunks of `1000000 / 10 = 100000`(here 10 is equal to no of workers). Each worker processes a block of 100,000 consecutive starting numbers. This ensures efficient use of multi-core processors.
@@ -51,7 +50,7 @@ There are no sequence of 4 numbers whose sum of squares is equal to a perfect sq
 
 ### Running Time
 
-The command `time ./DOSP_Project1 --lucas 1000000 4` was used to measure the running time of the program. The output of the `time` command is as follows:
+The command `time ./DOSP_Project1 --lucas 1000000 4` (this command works only on MacOS) was used to measure the running time of the program. The output of the `time` command is as follows:
 
 ./project-1 --lukas 1000000 4  0.21s user 0.01s system 670% cpu 0.032 total
 
@@ -64,7 +63,7 @@ CPU     670%     (This shows how efficiently the CPU was used. The percentage ca
 
 **CPU to Real Time Ratio**:
 ```
-user time / real time = 0.21sec / 0.032sec = 6.56 ≈ CPU usage percentage (670%)
+(user time + sys time)  / real time = 0.22sec / 0.032sec = 6.875 ≈ CPU usage percentage (670%)
 ```
 
 This means that the program achieved parallelism and it is indicative of good multi-core usage.
@@ -99,7 +98,7 @@ All workers completed
 
 ### Running Time
 
-The command `time ./DOSP_Project1 --lucas 10000000000 24` was used to measure the running time of the program. The output of the `time` command is as follows:
+The command `time ./DOSP_Project1 --lucas 10000000000 24`(this command works only on MacOS) was used to measure the running time of the program. The output of the `time` command is as follows:
 
 ./project-1 10000000000 24  1795.27s user 4.82s system 967% cpu 3:06.09 total
 ```
@@ -111,13 +110,30 @@ CPU     967%     (This shows how efficiently the CPU was used. The percentage ca
 
 **CPU to Real Time Ratio**:
 ```
-user time / real time = 1795.27sec / 186.09sec = 9.64 ≈ CPU usage percentage (967%)
+(user time + sys time) / real time = 1800.09 sec / 186.09 sec = 9.67 ≈ CPU usage percentage (967%)
 ```
+
+### Performance Results 
+
+N = 10^8 and k = 24
+
+| No. of Worker Actors | Real Time (s) | User time + system time(s) | Ratio ({User + system time} / Real Time) |
+|----------------------|---------------|---------------|-------------------------------|
+| 10                   | 1.693         | 15.80 + 0.05     | 9.36                          |
+| 100                  | 1.650         | 15.93 + 0.04     | 9.67                          |
+| 1000                 | 1.647         | 15.89 + 0.05     | 9.67                          |
+| 10000                | 1.717         | 16.32 + 0.12     | 9.57                          |
+| 100000               | 2.397         | 19.95 + 0.57     | 8.56                          |
+| 1000000              | 52.105        | 73.17 + 86.98    | 3.07                          |
+                         
+We can clearly see that as the number of actors increases from 100,000 to 1,000,000, the system time (which represents the amount of CPU time the program spent executing system-level code, including kernel-level operations like file I/O, memory allocation, and other operating system services) increases significantly. This dramatic rise in system time suggests that the operating system’s overhead in managing such a large number of actors becomes substantial. The scheduler is increasingly burdened with context switching, resource allocation, and managing the communication between actors.
+
+As a result, instead of improving performance, the excessive number of actors leads to inefficiencies, causing the system to spend more time on administrative tasks rather than on executing the actual program logic.
 
 ## Conclusion
 
 This implementation of the Lukas Square Pyramid problem uses the actor model to distribute work efficiently across multiple cores. By using a mathematical formula to calculate the sum of squares, we avoid costly loops and ensure the solution scales well with large inputs.
-The work unit size split based on the total number of workers (for example, 10 workers). The size of each work unit is determined by N / total_workers, where N is the upper limit given by the user. If the resulting size is less than k, it is adjusted so that each worker handles at least k consecutive numbers.
+The work unit size split based on the total number of workers (for example, 10 workers). The size of each work unit is determined by N / total_workers, where N is the upper limit given by the user. 
 
-### Future Improvements
+### Future Improvement
 - **Utilizing another machine**: Use remote actors and run our program on 2+ machines. Use our solution to solve a really large instance.

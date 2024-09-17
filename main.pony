@@ -21,7 +21,7 @@ actor Worker
     var value = utils.sqrt(sum)
    // Printer.print(value,env)
     if (value * value) == sum then
-      env.out.print("1 s = " + value.string())
+      env.out.print(startind.string() + " s = "+ value.string())
     end
 
     //Slide the window across the range
@@ -77,9 +77,7 @@ actor Boss
 
   be start(n: U64, k: U64,env:Env) =>
     var split: U64 = n / _total_workers     // each Split has to minimun of size k 
-    if split < k then
-      split = k
-    end
+    
 
     var startind: U64 = 1
     let size : USize = _workers.size() 
@@ -139,9 +137,6 @@ actor Main
     let boss = Boss(env, total_workers.u64())
     boss.start(num1, num2, env)
 
-//Things to do:
-// 3) make a readme file with all the metrics and everything needed to run file
-/* 
-*/
+
 
     
